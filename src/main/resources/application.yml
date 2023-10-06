@@ -20,9 +20,15 @@ spring:
       settings:
         trace: false
         web-allow-others: false
-  security:
-    user:
-      name: user
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+
 ---
 spring:
   profiles:
