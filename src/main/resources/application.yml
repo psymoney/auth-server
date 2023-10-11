@@ -22,7 +22,8 @@ spring:
         web-allow-others: false
 logging:
   level:
-    org.springframework.web: DEBUG
+    com.psymoney.authserver: DEBUG
+    org.springframework: ERROR
     org:
       hibernate:
         type:
