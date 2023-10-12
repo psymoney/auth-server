@@ -1,12 +1,15 @@
 package com.psymoney.authserver.user.adapter.out.persistence;
 
 import com.psymoney.authserver.user.application.port.out.RegisterUserPort;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.psymoney.authserver.user.domain.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+@RequiredArgsConstructor
 @Component
-public class UserPersistenceAdapter implements RegisterUserPort {
-    @Autowired private UserRepository userRepository;
+class UserPersistenceAdapter implements RegisterUserPort {
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Override
     public boolean isUsernameExisted(String username) {
