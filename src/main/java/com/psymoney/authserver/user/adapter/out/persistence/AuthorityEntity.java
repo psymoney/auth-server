@@ -1,8 +1,10 @@
 package com.psymoney.authserver.user.adapter.out.persistence;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 
+@Data
 @Entity
 @Table(name = "authorities", indexes = @Index(name = "ix_auth_username", columnList = "username, authority"))
 public class AuthorityEntity {
