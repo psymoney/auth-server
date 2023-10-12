@@ -15,4 +15,11 @@ class UserPersistenceAdapter implements RegisterUserPort {
     public boolean isUsernameExisted(String username) {
         return userRepository.existsByUsername(username);
     }
+
+    @Override
+    public boolean saveUser(User user) {
+        UserEntity userEntity = userMapper.mapToEntity(user);
+        userRepository.save(userEntity);
+        return true;
+    }
 }
