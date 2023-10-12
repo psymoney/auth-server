@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class UserEntity {
 
     @Id
     @Column(length = 50, nullable = false)
@@ -20,5 +20,5 @@ public class User {
     private boolean enabled;
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Authority> authorities;
+    private List<AuthorityEntity> authorities;
 }
