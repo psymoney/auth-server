@@ -1,10 +1,11 @@
 package com.psymoney.authserver.user.adapter.out.persistence;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.List;
 
-
+@Data
 @Entity
 @Table(name = "users")
 public class UserEntity {
