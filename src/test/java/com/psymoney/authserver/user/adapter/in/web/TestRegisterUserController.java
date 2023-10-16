@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.psymoney.authserver.config.SecurityConfig;
 import com.psymoney.authserver.user.application.port.in.RegisterUserUseCase;
+import com.psymoney.authserver.user.exception.UserExistException;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.times;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -40,6 +42,24 @@ public class TestRegisterUserController {
 
         mockMvc.perform(buildPostRequest(mapDtoToJsonString(userDto)))
                 .andExpect(status().isOk());
+
+        then(registerUserUseCase).should(times(1))
+                .createNewUser(argThat(command ->
+                command.getUsername().equals(userDto.getUsername()) &&
+                command.getPassword().equals(userDto.getPassword())));
+    }
+
+    @Test
+    public void testRegisterUserFailureByUserExistException() throws Exception {
+        UserDto userDto = new UserDto("duplicateUser", "duplicateUserP");
+
+        willThrow(new UserExistException(userDto.getUsername()))
+                .given(registerUserUseCase).createNewUser(argThat(command ->
+                command.getUsername().equals(userDto.getUsername()) &&
+                command.getPassword().equals(userDto.getPassword())));
+
+        mockMvc.perform(buildPostRequest(mapDtoToJsonString(userDto)))
+                .andExpect(status().isConflict());
 
         then(registerUserUseCase).should(times(1))
                 .createNewUser(argThat(command ->
