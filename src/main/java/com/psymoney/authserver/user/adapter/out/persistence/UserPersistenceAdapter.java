@@ -17,9 +17,8 @@ class UserPersistenceAdapter implements RegisterUserPort {
     }
 
     @Override
-    public boolean saveUser(User user) {
+    public void saveUser(User user) {
         UserEntity userEntity = userMapper.mapToEntity(user);
         userRepository.save(userEntity);
-        return true;
     }
 }
