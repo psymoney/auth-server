@@ -47,10 +47,9 @@ public class TestUserPersistenceAdapter {
         expectedUserEntity.setPassword("testPassword");
         expectedUserEntity.setEnabled(true);
 
-        boolean isSaved = userPersistenceAdapter.saveUser(givenUser);
+        userPersistenceAdapter.saveUser(givenUser);
         UserEntity actualUserEntity = userRepository.findByUsername("test");
 
-        assertThat(isSaved).isTrue();
         assertThat(actualUserEntity.isEnabled()).isEqualTo(expectedUserEntity.isEnabled());
         assertThat(actualUserEntity.getPassword()).isEqualTo(expectedUserEntity.getPassword());
         assertThat(actualUserEntity.getUsername()).isEqualTo(expectedUserEntity.getUsername());
