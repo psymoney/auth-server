@@ -3,15 +3,20 @@ package com.psymoney.authserver.user.adapter.in.web;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.psymoney.authserver.config.SecurityConfig;
+import com.psymoney.authserver.user.application.port.in.RegisterUserUseCase;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -24,15 +29,22 @@ public class TestRegisterUserController {
     @Autowired
     MockMvc mockMvc;
 
+    @MockBean
+    RegisterUserUseCase registerUserUseCase;
+
     private final String URL = "/user/register";
 
     @Test
     public void testRegisterUserSuccess() throws Exception {
         UserDto userDto = new UserDto("validUserName", "validPassword");
-        String jsonData = mapDtoToJsonString(userDto);
 
-        mockMvc.perform(buildPostRequest(jsonData))
+        mockMvc.perform(buildPostRequest(mapDtoToJsonString(userDto)))
                 .andExpect(status().isOk());
+
+        then(registerUserUseCase).should(times(1))
+                .createNewUser(argThat(command ->
+                command.getUsername().equals(userDto.getUsername()) &&
+                command.getPassword().equals(userDto.getPassword())));
     }
 
     @Test
